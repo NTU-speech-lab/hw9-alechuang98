@@ -22,12 +22,14 @@ def inference(X, model, batch_size=256):
 
 def predict(latents):
     # First Dimension Reduction
-    transformer = KernelPCA(n_components=200, kernel='rbf', n_jobs=-1)
+    '''
+    transformer = KernelPCA(n_components=2048, kernel='rbf', n_jobs=-1)
     kpca = transformer.fit_transform(latents)
     print('First Reduction Shape:', kpca.shape)
+    '''
 
     # # Second Dimesnion Reduction
-    X_embedded = TSNE(n_components=2).fit_transform(kpca)
+    X_embedded = TSNE(n_components=2).fit_transform(latents)
     print('Second Reduction Shape:', X_embedded.shape)
 
     # Clustering

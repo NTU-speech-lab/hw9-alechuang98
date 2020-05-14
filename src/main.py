@@ -10,10 +10,10 @@ from utils import *
 from model import AE
 from cluster import *
 
-TRAIN = 1
+TRAIN = 0
 TEST = 1
 HW = 1
-EPOCH = 100
+EPOCH = 250
 
 same_seeds(0)
 
@@ -46,7 +46,7 @@ if TRAIN:
             loss.backward()
             optimizer.step()
             if (epoch+1) % 10 == 0:
-                torch.save(model.state_dict(), './checkpoints/checkpoint_{}.pth'.format(epoch+1))
+                torch.save(model.state_dict(), './checkpoints/checkpoint_{:03d}.pth'.format(epoch+1))
                 
         print('epoch [{}/{}], loss:{:.5f}'.format(epoch+1, n_epoch, loss.data))
 
@@ -89,7 +89,8 @@ if HW:
     acc_latent = cal_acc(valY, pred_from_latent)
     print('The clustering accuracy is:', acc_latent)
     print('The clustering result:')
-    plot_scatter(emb_from_latent, valY, savefig='p1_baseline.png')
+    plot_scatter(emb_from_latent, pred_from_latent, savefig='p1_label.png')
+    plot_scatter(emb_from_latent, valY, savefig='p1_improve.png')
 
     plt.figure(figsize=(10,4))
     indexes = [1,2,3,6,7,9]
