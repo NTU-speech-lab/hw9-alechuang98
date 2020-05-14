@@ -1,0 +1,10 @@
+data/
+ckpt/
+ckpt*/
+checkpoints*/
+cmn-eng/
+*.csv
+__pycache__/
+.vscode
+*.pt
+test_output.txt
