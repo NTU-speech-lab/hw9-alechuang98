@@ -10,7 +10,7 @@ from utils import *
 from model import AE
 from cluster import *
 
-TRAIN = 0
+TRAIN = 1
 TEST = 1
 HW = 1
 EPOCH = 250

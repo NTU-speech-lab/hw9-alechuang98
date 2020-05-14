@@ -18,10 +18,19 @@ class AE(nn.Module):
             nn.Conv2d(128, 256, 3, stride=1, padding=1), # 8 -> 4
             nn.BatchNorm2d(256),
             nn.ReLU(True),
+            nn.MaxPool2d(2),
+
+            nn.Conv2d(256, 512, 3, stride=1, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),
             nn.MaxPool2d(2)
         )
  
         self.decoder = nn.Sequential(
+            nn.ConvTranspose2d(512, 256, 3, stride=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(True),
+
             nn.ConvTranspose2d(256, 128, 5, stride=1),
             nn.BatchNorm2d(128),
             nn.ReLU(True),
