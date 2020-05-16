@@ -7,25 +7,28 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from data import *
 from utils import *
-from model import AE
+from model import AE, AE_base
 from cluster import *
 
-TRAIN = 1
-TEST = 1
+TRAIN = 0
+TEST = 0
 HW = 1
 EPOCH = 250
-
-same_seeds(0)
+SEED = 0
+SK_SEED = 0x5EED
+same_seeds(SEED)
 
 trainX = np.load('./data/trainX.npy')
 trainX_preprocessed = preprocess(trainX)
 
+MODEL = AE()
+
 if TRAIN:
     img_dataset = Image_Dataset(trainX_preprocessed)
 
-    model = AE().cuda()
+    model = MODEL.cuda()
     criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-5, weight_decay=1e-5)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-5, weight_decay=1e-5)
 
     model.train()
     n_epoch = EPOCH
@@ -51,13 +54,13 @@ if TRAIN:
         print('epoch [{}/{}], loss:{:.5f}'.format(epoch+1, n_epoch, loss.data))
 
     # 訓練完成後儲存 model
-    torch.save(model.state_dict(), './checkpoints/last_checkpoint.pth')
+    torch.save(model.state_dict(), './checkpoints_train/last_checkpoint.pth')
 
 
 if TEST:
     # load model
-    model = AE().cuda()
-    model.load_state_dict(torch.load('./checkpoints/last_checkpoint.pth'))
+    model = MODEL.cuda()
+    model.load_state_dict(torch.load('./checkpoints_train/checkpoint_220.pth'))
     model.eval()
 
     # 準備 data
@@ -82,15 +85,16 @@ if HW:
     #  我們示範 basline model 的作圖，
     #  report 請同學另外還要再畫一張 improved model 的圖。
     # ==============================================
-    model.load_state_dict(torch.load('./checkpoints/last_checkpoint.pth'))
+    model = MODEL.cuda()
+    model.load_state_dict(torch.load('./checkpoints_hw/best.pth'))
     model.eval()
     latents = inference(valX, model)
-    pred_from_latent, emb_from_latent = predict(latents)
+    pred_from_latent, emb_from_latent = predict(latents, seed=SK_SEED)
     acc_latent = cal_acc(valY, pred_from_latent)
     print('The clustering accuracy is:', acc_latent)
     print('The clustering result:')
     plot_scatter(emb_from_latent, pred_from_latent, savefig='p1_label.png')
-    plot_scatter(emb_from_latent, valY, savefig='p1_improve.png')
+    plot_scatter(emb_from_latent, valY, savefig='p1_improved.png')
 
     plt.figure(figsize=(10,4))
     indexes = [1,2,3,6,7,9]

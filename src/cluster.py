@@ -20,7 +20,7 @@ def inference(X, model, batch_size=256):
     print('Latents Shape:', latents.shape)
     return latents
 
-def predict(latents):
+def predict(latents, seed=0x5EED):
     # First Dimension Reduction
     
     transformer = KernelPCA(n_components=256, kernel='rbf', n_jobs=-1)
@@ -29,7 +29,7 @@ def predict(latents):
     
 
     # # Second Dimesnion Reduction
-    X_embedded = TSNE(n_components=2).fit_transform(latents)
+    X_embedded = TSNE(n_components=2, random_state=seed).fit_transform(latents)
     print('Second Reduction Shape:', X_embedded.shape)
 
     # Clustering

@@ -1,7 +1,5 @@
 data/
-ckpt/
-ckpt*/
-checkpoints*/
+checkpoints_train/
 cmn-eng/
 *.csv
 __pycache__/
