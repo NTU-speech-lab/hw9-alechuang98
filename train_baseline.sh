@@ -1,1 +1,1 @@
-python src/hw.py --mode train --quality base --trainX_path $1 --checkpoint $2
+python3 src/hw.py --mode train --quality base --trainX_path $1 --checkpoint $2
